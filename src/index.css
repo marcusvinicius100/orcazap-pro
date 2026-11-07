@@ -1,0 +1,96 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-slate-950 text-slate-100 min-h-screen selection:bg-brand-600 selection:text-white font-sans;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Scrollbar customizada moderna */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #0f172a;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #334155;
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #475569;
+  }
+}
+
+/* Folha A4 para preview na tela */
+.a4-sheet {
+  width: 210mm;
+  min-height: 297mm;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+@media screen and (max-width: 1024px) {
+  .a4-sheet {
+    width: 100%;
+    min-height: auto;
+  }
+}
+
+/* Regras Estritas de Impressão @media print para PDF A4 Perfeito */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 8mm;
+  }
+
+  html, body {
+    background: #ffffff !important;
+    color: #0f172a !important;
+    font-size: 11pt !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    min-height: auto !important;
+    overflow: visible !important;
+  }
+
+  /* Ocultar tudo que não for o documento A4 */
+  .no-print,
+  nav,
+  header,
+  footer,
+  aside,
+  button,
+  .action-bar,
+  .modal-overlay,
+  .tabs-navigation {
+    display: none !important;
+  }
+
+  /* Configuração do container A4 */
+  .a4-sheet {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-height: auto !important;
+    box-shadow: none !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    background: #ffffff !important;
+    page-break-after: avoid;
+    break-inside: avoid;
+  }
+
+  /* Preservar cores e bordas ao imprimir */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .print-page-break {
+    page-break-before: always;
+  }
+}

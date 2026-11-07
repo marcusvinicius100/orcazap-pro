@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <defs>
+    <linearGradient id="grad-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#059669" />
+      <stop offset="100%" stop-color="#047857" />
+    </linearGradient>
+    <linearGradient id="grad-zap" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fef08a" />
+      <stop offset="100%" stop-color="#eab308" />
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000000" flood-opacity="0.3" />
+    </filter>
+  </defs>
+  
+  <!-- Fundo Arredondado Moderno -->
+  <rect width="512" height="512" rx="128" fill="url(#grad-bg)" />
+  
+  <!-- Documento / Folha Comercial -->
+  <g filter="url(#shadow)">
+    <path d="M140 100 H330 L380 150 V410 C380 423.25 369.25 434 356 434 H140 C126.75 434 116 423.25 116 410 V124 C116 110.75 126.75 100 140 100 Z" fill="#ffffff" />
+    <path d="M330 100 V150 H380 Z" fill="#e2e8f0" />
+    
+    <!-- Linhas do documento -->
+    <rect x="156" y="154" width="130" height="16" rx="8" fill="#10b981" />
+    <rect x="156" y="196" width="200" height="12" rx="6" fill="#cbd5e1" />
+    <rect x="156" y="226" width="170" height="12" rx="6" fill="#cbd5e1" />
+    <rect x="156" y="256" width="190" height="12" rx="6" fill="#cbd5e1" />
+    <rect x="156" y="286" width="150" height="12" rx="6" fill="#cbd5e1" />
+  </g>
+  
+  <!-- Círculo e Raio Zap -->
+  <g filter="url(#shadow)">
+    <circle cx="340" cy="330" r="90" fill="#0f172a" />
+    <circle cx="340" cy="330" r="82" fill="#1e293b" />
+    <path d="M346 265 L295 340 H338 L330 405 L385 325 H342 L346 265 Z" fill="url(#grad-zap)" stroke="#ca8a04" stroke-width="2" stroke-linejoin="round" />
+  </g>
+</svg>
