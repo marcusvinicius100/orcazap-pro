@@ -212,7 +212,9 @@ export function App() {
               budget={currentBudget}
               onChange={(updated) => {
                 setCurrentBudget(updated);
+                saveOrUpdateBudget(updated);
               }}
+              onProviderChange={handleSaveProvider}
             />
           </div>
 

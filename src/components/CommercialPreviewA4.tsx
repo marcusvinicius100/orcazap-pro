@@ -30,12 +30,13 @@ export const CommercialPreviewA4: React.FC<CommercialPreviewA4Props> = ({ budget
   const validUntil = new Date(budget.createdAt);
   validUntil.setDate(validUntil.getDate() + (budget.terms.validityDays || 7));
 
+  const activePixKey = budget.terms.pixKey || budget.provider.pixKey || 'c53a217d-bd84-445d-839d-e976fa7138e6';
+
   // Gera QR Code no Canvas para o PIX
   useEffect(() => {
-    if (qrCanvasRef.current && budget.terms.pixKey) {
-      // Monta um payload simples de PIX ou chave direta
-      const pixPayload = budget.terms.pixKey;
-      QRCode.toCanvas(qrCanvasRef.current, pixPayload, {
+    if (qrCanvasRef.current && activePixKey) {
+      // Monta o QR Code com a chave PIX atualizada em tempo real
+      QRCode.toCanvas(qrCanvasRef.current, activePixKey, {
         width: 90,
         margin: 1,
         color: {
@@ -44,11 +45,11 @@ export const CommercialPreviewA4: React.FC<CommercialPreviewA4Props> = ({ budget
         },
       }).catch((err) => console.error('Erro ao renderizar QRCode:', err));
     }
-  }, [budget.terms.pixKey, budget.total]);
+  }, [activePixKey, budget.total]);
 
   const copyPixKey = () => {
-    if (!budget.terms.pixKey) return;
-    navigator.clipboard.writeText(budget.terms.pixKey);
+    if (!activePixKey) return;
+    navigator.clipboard.writeText(activePixKey);
     setCopiedPix(true);
     setTimeout(() => setCopiedPix(false), 2000);
   };
@@ -66,13 +67,13 @@ export const CommercialPreviewA4: React.FC<CommercialPreviewA4Props> = ({ budget
                 <Building2 className="w-4 h-4" />
               </div>
               <h1 className="text-xl font-black text-slate-900 tracking-tight leading-tight">
-                {budget.provider.tradeName || budget.provider.companyName || 'Empresa Prestadora'}
+                {budget.provider.companyName || budget.provider.tradeName || 'Minha Empresa'}
               </h1>
             </div>
 
-            {budget.provider.tradeName && (
+            {budget.provider.tradeName && budget.provider.tradeName !== budget.provider.companyName && (
               <p className="text-xs font-medium text-slate-600">
-                {budget.provider.companyName}
+                {budget.provider.tradeName}
               </p>
             )}
 
@@ -204,7 +205,7 @@ export const CommercialPreviewA4: React.FC<CommercialPreviewA4Props> = ({ budget
         <div className="md:col-span-7 space-y-3">
           
           {/* Caixa do PIX */}
-          {budget.terms.pixKey && (
+          {activePixKey && (
             <div className="bg-emerald-50/60 border border-emerald-200/80 rounded-xl p-3 flex items-center gap-3">
               <div className="bg-white p-1 rounded-lg border border-emerald-200 shadow-sm shrink-0">
                 <canvas ref={qrCanvasRef} width={80} height={80} className="w-16 h-16" />
@@ -220,7 +221,7 @@ export const CommercialPreviewA4: React.FC<CommercialPreviewA4Props> = ({ budget
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="font-mono text-[11px] bg-white px-2 py-0.5 rounded border border-emerald-200 text-emerald-950 font-semibold truncate max-w-[200px]">
-                    {budget.terms.pixKey}
+                    {activePixKey}
                   </span>
                   <button
                     type="button"

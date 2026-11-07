@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { 
   User, 
   Phone, 
@@ -14,17 +14,56 @@ import {
   ShieldCheck, 
   Calendar,
   Sparkles,
-  Layers
+  Layers,
+  Settings,
+  Building2,
+  ChevronDown,
+  ChevronUp,
+  QrCode,
+  Zap,
+  Check
 } from 'lucide-react';
-import { Budget, BudgetItem, PaymentMethod } from '../types';
+import { Budget, BudgetItem, PaymentMethod, ProviderProfile } from '../types';
 import { formatCurrency } from '../utils/formatters';
 
 interface EditorPanelProps {
   budget: Budget;
   onChange: (updated: Budget) => void;
+  onProviderChange?: (updated: ProviderProfile) => void;
 }
 
-export const EditorPanel: React.FC<EditorPanelProps> = ({ budget, onChange }) => {
+export const EditorPanel: React.FC<EditorPanelProps> = ({ budget, onChange, onProviderChange }) => {
+  // Controle da seção expansível Configurações da Minha Empresa
+  const [isCompanyExpanded, setIsCompanyExpanded] = useState<boolean>(true);
+
+  // Atualiza dados da Minha Empresa em tempo real e salva no LocalStorage
+  const handleCompanyFieldChange = (field: keyof ProviderProfile, value: string) => {
+    const updatedProvider: ProviderProfile = {
+      ...budget.provider,
+      [field]: value,
+      // Se atualizar o nome, sincroniza também o nome fantasia
+      ...(field === 'companyName' ? { tradeName: value } : {}),
+    };
+
+    // Sincroniza a chave PIX nos termos do orçamento para refletir na Folha A4 imediatamente
+    const updatedTerms = {
+      ...budget.terms,
+      ...(field === 'pixKey' ? { pixKey: value } : {}),
+      ...(field === 'companyName' && !budget.terms.pixReceiverName ? { pixReceiverName: value } : {}),
+    };
+
+    const updatedBudget: Budget = {
+      ...budget,
+      provider: updatedProvider,
+      terms: updatedTerms,
+    };
+
+    onChange(updatedBudget);
+    if (onProviderChange) {
+      onProviderChange(updatedProvider);
+    }
+  };
+
   // Atualiza campo do cliente
   const handleClientChange = (field: string, value: string) => {
     onChange({
@@ -170,6 +209,135 @@ export const EditorPanel: React.FC<EditorPanelProps> = ({ budget, onChange }) =>
 
   return (
     <div className="space-y-6 pb-20 lg:pb-8">
+      {/* ⚙️ CONFIGURAÇÕES DA MINHA EMPRESA (EXPANSÍVEL) */}
+      <section className="bg-slate-900/95 border border-emerald-500/30 rounded-2xl p-5 shadow-xl relative overflow-hidden transition-all duration-200">
+        <div className="absolute top-0 left-0 h-1 w-full bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-500" />
+        
+        {/* Cabeçalho da Seção com Botão Expansível */}
+        <div className="flex items-center justify-between">
+          <button
+            type="button"
+            onClick={() => setIsCompanyExpanded(!isCompanyExpanded)}
+            className="flex items-center gap-2.5 text-left group flex-1 focus:outline-none"
+            title="Clique para expandir ou recolher as configurações da sua empresa"
+          >
+            <div className="p-2 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 group-hover:bg-emerald-500/30 transition-colors">
+              <Settings className="w-4 h-4 animate-spin-slow" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h2 className="text-sm font-bold text-white tracking-wide flex items-center gap-1.5">
+                  ⚙️ Configurações da Minha Empresa
+                </h2>
+                <span className="hidden sm:inline-flex items-center gap-1 text-[10px] font-semibold bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded-full border border-emerald-500/30">
+                  <Zap className="w-3 h-3 text-emerald-400" /> Tempo Real
+                </span>
+              </div>
+              <p className="text-xs text-slate-400">Edite seus dados direto pelo app para atualizar a Folha A4</p>
+            </div>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setIsCompanyExpanded(!isCompanyExpanded)}
+            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors ml-2"
+          >
+            {isCompanyExpanded ? (
+              <ChevronUp className="w-5 h-5 text-emerald-400" />
+            ) : (
+              <ChevronDown className="w-5 h-5 text-slate-400" />
+            )}
+          </button>
+        </div>
+
+        {/* Conteúdo Expansível com os 4 Campos de Texto */}
+        {isCompanyExpanded && (
+          <div className="mt-4 pt-4 border-t border-slate-800/80 space-y-4 animate-fadeIn">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+              {/* Campo 1: Nome da Empresa */}
+              <div>
+                <label className="block text-xs font-semibold text-slate-200 mb-1">
+                  Nome da Empresa / Prestador *
+                </label>
+                <div className="relative">
+                  <Building2 className="w-4 h-4 text-emerald-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                  <input
+                    type="text"
+                    required
+                    placeholder="Ex: Minha Empresa Serviços Ltda"
+                    value={budget.provider.companyName || ''}
+                    onChange={(e) => handleCompanyFieldChange('companyName', e.target.value)}
+                    className="w-full bg-slate-800/90 border border-slate-700 focus:border-emerald-500 rounded-lg pl-9 pr-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/30 transition-all font-medium"
+                  />
+                </div>
+              </div>
+
+              {/* Campo 2: CNPJ */}
+              <div>
+                <label className="block text-xs font-semibold text-slate-200 mb-1">
+                  CNPJ ou CPF *
+                </label>
+                <div className="relative">
+                  <FileText className="w-4 h-4 text-teal-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                  <input
+                    type="text"
+                    placeholder="00.000.000/0001-00"
+                    value={budget.provider.document || ''}
+                    onChange={(e) => handleCompanyFieldChange('document', e.target.value)}
+                    className="w-full bg-slate-800/90 border border-slate-700 focus:border-emerald-500 rounded-lg pl-9 pr-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/30 transition-all font-mono"
+                  />
+                </div>
+              </div>
+
+              {/* Campo 3: Telefone */}
+              <div>
+                <label className="block text-xs font-semibold text-slate-200 mb-1">
+                  Telefone / WhatsApp Comercial *
+                </label>
+                <div className="relative">
+                  <Phone className="w-4 h-4 text-emerald-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                  <input
+                    type="text"
+                    placeholder="(11) 98765-4321"
+                    value={budget.provider.phone || ''}
+                    onChange={(e) => handleCompanyFieldChange('phone', e.target.value)}
+                    className="w-full bg-slate-800/90 border border-slate-700 focus:border-emerald-500 rounded-lg pl-9 pr-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/30 transition-all font-mono"
+                  />
+                </div>
+              </div>
+
+              {/* Campo 4: Chave PIX (Padrão: c53a217d-bd84-445d-839d-e976fa7138e6) */}
+              <div>
+                <label className="block text-xs font-semibold text-slate-200 mb-1">
+                  Chave PIX (Padrão) *
+                </label>
+                <div className="relative">
+                  <QrCode className="w-4 h-4 text-cyan-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                  <input
+                    type="text"
+                    required
+                    placeholder="c53a217d-bd84-445d-839d-e976fa7138e6"
+                    value={budget.provider.pixKey || budget.terms.pixKey || 'c53a217d-bd84-445d-839d-e976fa7138e6'}
+                    onChange={(e) => handleCompanyFieldChange('pixKey', e.target.value)}
+                    className="w-full bg-slate-800/90 border border-slate-700 focus:border-emerald-500 rounded-lg pl-9 pr-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/30 transition-all font-mono text-xs select-all"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between text-[11px] text-slate-400 pt-1">
+              <span className="flex items-center gap-1.5 text-emerald-400 font-medium">
+                <Check className="w-3.5 h-3.5 text-emerald-400" />
+                Salvo instantaneamente no LocalStorage do aparelho
+              </span>
+              <span className="text-slate-500 hidden sm:inline">
+                Reflete na Folha A4 em tempo real
+              </span>
+            </div>
+          </div>
+        )}
+      </section>
+
       {/* 1. DADOS DO CLIENTE */}
       <section className="bg-slate-900/90 border border-slate-800 rounded-2xl p-5 shadow-lg relative overflow-hidden">
         <div className="absolute top-0 left-0 h-1 w-full bg-gradient-to-r from-emerald-500 to-teal-400" />

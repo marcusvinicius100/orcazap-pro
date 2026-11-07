@@ -13,9 +13,9 @@ export const defaultProvider: ProviderProfile = {
   address: 'Av. Paulista, 1500 - Conj. 82',
   city: 'São Paulo',
   state: 'SP',
-  pixKey: 'pix@techsolutions.com.br',
-  pixKeyType: 'email',
-  pixReceiverName: 'TechSolutions Servicos Ltda',
+  pixKey: 'c53a217d-bd84-445d-839d-e976fa7138e6',
+  pixKeyType: 'random',
+  pixReceiverName: 'Minha Empresa',
   defaultValidityDays: 10,
   defaultWarranty: '90 dias contra qualquer vício de fabricação ou serviço.',
   defaultNotes: 'Condições válidas mediante aprovação cadastral e confirmação dos insumos.',
@@ -69,9 +69,9 @@ export const sampleBudgets: Budget[] = [
     terms: {
       paymentMethod: 'pix',
       installments: 1,
-      pixKeyType: 'email',
-      pixKey: 'pix@techsolutions.com.br',
-      pixReceiverName: 'TechSolutions Servicos Ltda',
+      pixKeyType: 'random',
+      pixKey: 'c53a217d-bd84-445d-839d-e976fa7138e6',
+      pixReceiverName: 'Minha Empresa',
       validityDays: 10,
       deliveryTime: '7 a 10 dias úteis',
       warranty: '90 dias de garantia e manutenção',
@@ -124,7 +124,7 @@ export const sampleBudgets: Budget[] = [
       paymentMethod: 'credit_card',
       installments: 3,
       pixKeyType: 'email',
-      pixKey: 'pix@techsolutions.com.br',
+      pixKey: 'c53a217d-bd84-445d-839d-e976fa7138e6',
       pixReceiverName: 'TechSolutions Servicos Ltda',
       validityDays: 7,
       deliveryTime: '2 dias úteis',
@@ -141,7 +141,12 @@ export function loadProviderProfile(): ProviderProfile {
   try {
     const raw = localStorage.getItem(STORAGE_KEY_PROVIDER);
     if (raw) {
-      return { ...defaultProvider, ...JSON.parse(raw) };
+      const parsed = JSON.parse(raw);
+      // Se tiver a chave antiga de placeholder, atualiza para a chave padrão do usuário
+      if (!parsed.pixKey || parsed.pixKey === 'pix@techsolutions.com.br') {
+        parsed.pixKey = defaultProvider.pixKey;
+      }
+      return { ...defaultProvider, ...parsed };
     }
   } catch (err) {
     console.error('Erro ao ler perfil do prestador:', err);
