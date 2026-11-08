@@ -7,15 +7,15 @@ export function generateWhatsAppMessage(budget: Budget): string {
   const validUntilDate = new Date(budget.createdAt);
   validUntilDate.setDate(validUntilDate.getDate() + (budget.terms.validityDays || 7));
 
-  // Itens formatados com recuo e alinhamento conforme solicitado
+  // Itens formatados com marcador ▪️ e alinhamento com recuo
   const itemsList = budget.items
     .map((item) => {
       const unitStr = item.unit || 'un';
-      return `🔹 *${item.description || 'Item / Serviço'}*\n     ↳ ${item.quantity} ${unitStr} × ${formatCurrency(item.unitPrice)}  |  *Total: ${formatCurrency(item.total)}*`;
+      return `▪️ *${item.description || 'Item / Serviço'}*\n     ↳ ${item.quantity} ${unitStr} × ${formatCurrency(item.unitPrice)}  |  *Total: ${formatCurrency(item.total)}*`;
     })
     .join('\n\n');
 
-  // Resumo financeiro com recuos de 3 espaços criando hierarquia visual
+  // Resumo financeiro com marcadores •
   let financialSummary = `   • Subtotal dos Itens: ${formatCurrency(budget.subtotal)}`;
   if (budget.discountCalculated > 0) {
     financialSummary += `\n   • Desconto Aplicado: -${formatCurrency(budget.discountCalculated)}`;
@@ -39,41 +39,40 @@ export function generateWhatsAppMessage(budget: Budget): string {
   }
 
   const pixKey = budget.terms.pixKey || budget.provider.pixKey || 'c53a217d-bd84-445d-839d-e976fa7138e6';
-  const pixReceiver = budget.terms.pixReceiverName || provider.companyName || 'Minha Empresa';
   const companyName = provider.companyName || provider.tradeName || 'Minha Empresa';
 
   const message = `📊 *PROPOSTA COMERCIAL | ${budget.number}*
---------------------------------------------------
+=======================================
 Olá, *${client.name || 'Cliente'}*! Tudo bem?
 
-Segue o detalhamento da proposta de serviços e valores preparada exclusivamente para você por *${companyName}*.
+Segue o detalhamento da proposta preparada por *${companyName}*.
 
-⬜  *ITENS E SERVIÇOS*
---------------------------------------------------
-${itemsList || '🔹 *Serviço Especializado*\n     ↳ 1 un × ' + formatCurrency(budget.total) + '  |  *Total: ' + formatCurrency(budget.total) + '*'}
+📌 *ITENS E SERVIÇOS*
+---------------------------------------
+${itemsList || '▪️ *Serviço Especializado*\n     ↳ 1 un × ' + formatCurrency(budget.total) + '  |  *Total: ' + formatCurrency(budget.total) + '*'}
 
-⬜  *RESUMO FINANCEIRO*
---------------------------------------------------
+📌 *RESUMO FINANCEIRO*
+---------------------------------------
 ${financialSummary}
-⭐️  *VALOR TOTAL GERAL: ${formatCurrency(budget.total)}*
+⭐️ *VALOR TOTAL GERAL: ${formatCurrency(budget.total)}*
 
-⬜  *CONDIÇÕES COMERCIAIS*
---------------------------------------------------
-   ⚙️ *Forma de Pagamento:* ${paymentMethodLabel}
-   🔑 *Chave PIX para Depósito:* \`${pixKey}\` (${pixReceiver})
-   ⏱️ *Prazo de Execução:* ${budget.terms.deliveryTime || 'A combinar'}
-   🛡️ *Garantia dos Serviços:* ${budget.terms.warranty || 'Garantia legal de 90 dias'}
-   📅 *Validade da Proposta:* até ${formatDateBR(validUntilDate.toISOString())}
+📌 *CONDIÇÕES COMERCIAIS*
+---------------------------------------
+   • Forma de Pagamento: ${paymentMethodLabel}
+   • Chave PIX: ${pixKey}
+   • Prazo de Execução: ${budget.terms.deliveryTime || 'A combinar'}
+   • Garantia: ${budget.terms.warranty || 'Garantia legal de 90 dias'}
+   • Validade da Proposta: até ${formatDateBR(validUntilDate.toISOString())}
 
-📝  *OBSERVAÇÕES*
---------------------------------------------------
-_${budget.terms.notes || 'Proposta sujeita aos termos e condições acordados. Valores válidos pelo período da proposta.'}_
+📌 *OBSERVAÇÕES*
+---------------------------------------
+_${budget.terms.notes || 'Proposta sujeita aos termos e condições acordados.'}_
 
---------------------------------------------------
-Qualquer dúvida ou ajuste que precisar, estou à inteira disposição para conversarmos e fecharmos o projeto. Podemos confirmar para darmos início?
+=======================================
+Qualquer dúvida, estou à disposição para fecharmos o projeto!
 
 Atenciosamente,
-*${companyName}*${provider.phone ? `\n📞 ${provider.phone}` : ''}`;
+*${companyName}*`;
 
   return message;
 }
@@ -95,5 +94,5 @@ export function openWhatsApp(budget: Budget): void {
   window.open(url, '_blank');
 }
 
-// Alias em português para interoperabilidade
+// Alias em português
 export const enviarWhatsApp = openWhatsApp;
