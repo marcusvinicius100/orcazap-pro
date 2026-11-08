@@ -4,12 +4,11 @@ import App from './App';
 import './index.css';
 import { registerSW } from 'virtual:pwa-register';
 
-// Registro automático do Service Worker para suporte PWA offline e instalação
+// Registro automático do Service Worker para suporte PWA com atualização imediata sem cache antigo
 const updateSW = registerSW({
+  immediate: true,
   onNeedRefresh() {
-    if (confirm('Nova versão do OrçaZap Pro disponível! Deseja atualizar agora?')) {
-      updateSW(true);
-    }
+    updateSW(true);
   },
   onOfflineReady() {
     console.log('OrçaZap Pro está pronto para operar offline!');

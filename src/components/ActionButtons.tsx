@@ -9,7 +9,7 @@ import {
   MessageSquare
 } from 'lucide-react';
 import { Budget } from '../types';
-import { openWhatsApp } from '../utils/whatsapp';
+import { openWhatsApp, enviarWhatsApp } from '../utils/whatsapp';
 
 interface ActionButtonsProps {
   budget: Budget;
@@ -35,7 +35,7 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
   };
 
   const handleWhatsAppClick = () => {
-    openWhatsApp(budget);
+    enviarWhatsApp(budget);
   };
 
   return (
