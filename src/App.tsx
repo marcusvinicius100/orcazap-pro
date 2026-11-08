@@ -16,7 +16,10 @@ import {
   createNewBudgetTemplate 
 } from './utils/storage';
 import { generateBudgetNumber } from './utils/formatters';
+import { openWhatsApp, enviarWhatsApp } from './utils/whatsapp';
 import { Edit3, Eye, Sparkles } from 'lucide-react';
+
+export { openWhatsApp, enviarWhatsApp };
 
 export function App() {
   // Estados principais

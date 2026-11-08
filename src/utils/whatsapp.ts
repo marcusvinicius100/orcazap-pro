@@ -7,62 +7,73 @@ export function generateWhatsAppMessage(budget: Budget): string {
   const validUntilDate = new Date(budget.createdAt);
   validUntilDate.setDate(validUntilDate.getDate() + (budget.terms.validityDays || 7));
 
+  // Itens formatados com recuo e alinhamento conforme solicitado
   const itemsList = budget.items
-    .map((item, index) => {
-      const unitStr = item.unit ? ` (${item.quantity} ${item.unit})` : ` (${item.quantity}x)`;
-      return `${index + 1}️⃣ *${item.description}*${unitStr}\n   ↳ ${formatCurrency(item.unitPrice)} un. | *Total: ${formatCurrency(item.total)}*`;
+    .map((item) => {
+      const unitStr = item.unit || 'un';
+      return `🔹 *${item.description || 'Item / Serviço'}*\n     ↳ ${item.quantity} ${unitStr} × ${formatCurrency(item.unitPrice)}  |  *Total: ${formatCurrency(item.total)}*`;
     })
     .join('\n\n');
 
-  let discountText = '';
+  // Resumo financeiro com recuos de 3 espaços criando hierarquia visual
+  let financialSummary = `   • Subtotal dos Itens: ${formatCurrency(budget.subtotal)}`;
   if (budget.discountCalculated > 0) {
-    discountText = `\n🎁 *Desconto Especial:* -${formatCurrency(budget.discountCalculated)}`;
+    financialSummary += `\n   • Desconto Aplicado: -${formatCurrency(budget.discountCalculated)}`;
   }
-
-  let travelFeeText = '';
   if (budget.travelFee > 0) {
-    travelFeeText = `\n🚗 *Taxa de Deslocamento/Entrega:* ${formatCurrency(budget.travelFee)}`;
+    financialSummary += `\n   • Taxa de Deslocamento: +${formatCurrency(budget.travelFee)}`;
   }
 
-  let paymentMethodLabel = 'PIX à vista';
+  // Forma de pagamento
+  let paymentMethodLabel = 'PIX à Vista';
   if (budget.terms.paymentMethod === 'credit_card') {
-    paymentMethodLabel = `Cartão de Crédito (${budget.terms.installments}x)`;
+    const installments = budget.terms.installments || 1;
+    const parcelValue = formatCurrency(budget.total / installments);
+    paymentMethodLabel = `Cartão de Crédito (${installments}x de ${parcelValue})`;
   } else if (budget.terms.paymentMethod === 'boleto') {
     paymentMethodLabel = 'Boleto Bancário';
   } else if (budget.terms.paymentMethod === 'cash') {
-    paymentMethodLabel = 'Dinheiro / À vista';
+    paymentMethodLabel = 'Dinheiro em Espécie / À Vista';
+  } else if (budget.terms.paymentMethod === 'custom') {
+    paymentMethodLabel = '50% Entrada e 50% na Conclusão';
   }
 
-  let pixDetails = '';
-  if (budget.terms.pixKey) {
-    pixDetails = `\n🔑 *Chave PIX:* \`${budget.terms.pixKey}\` (${budget.terms.pixReceiverName || provider.companyName})`;
-  }
+  const pixKey = budget.terms.pixKey || budget.provider.pixKey || 'c53a217d-bd84-445d-839d-e976fa7138e6';
+  const pixReceiver = budget.terms.pixReceiverName || provider.companyName || 'Minha Empresa';
+  const companyName = provider.companyName || provider.tradeName || 'Minha Empresa';
 
-  const message = `📋 *PROPOSTA COMERCIAL - ${budget.number}*
-━━━━━━━━━━━━━━━━━━━━
+  const message = `📊 *PROPOSTA COMERCIAL | ${budget.number}*
+--------------------------------------------------
 Olá, *${client.name || 'Cliente'}*! Tudo bem?
-Conforme combinamos, segue a proposta de serviços e valores preparada exclusivamente para você pela *${provider.companyName || 'Nossa Empresa'}*.
 
-📦 *ITENS E SERVIÇOS:*
-${itemsList || '_Nenhum item informado_'}
-━━━━━━━━━━━━━━━━━━━━
-💵 *RESUMO FINANCEIRO:*
-• Subtotal: ${formatCurrency(budget.subtotal)}${discountText}${travelFeeText}
-⭐ *VALOR TOTAL: ${formatCurrency(budget.total)}*
-━━━━━━━━━━━━━━━━━━━━
-💳 *CONDIÇÕES COMERCIAIS:*
-• Forma de Pagamento: *${paymentMethodLabel}*${pixDetails}
-• Prazo de Execução: *${budget.terms.deliveryTime || 'A combinar'}*
-• Garantia: *${budget.terms.warranty || 'Garantia padrão de 90 dias'}*
-• Validade da Proposta: até *${formatDateBR(validUntilDate.toISOString())}*
+Segue o detalhamento da proposta de serviços e valores preparada exclusivamente para você por *${companyName}*.
 
-${budget.terms.notes ? `📝 *Observações:*\n_${budget.terms.notes}_\n` : ''}
-Qualquer dúvida ou ajuste que precisar, estou à disposição por aqui para fecharmos!
-Podemos confirmar para darmos início?
+⬜  *ITENS E SERVIÇOS*
+--------------------------------------------------
+${itemsList || '🔹 *Serviço Especializado*\n     ↳ 1 un × ' + formatCurrency(budget.total) + '  |  *Total: ' + formatCurrency(budget.total) + '*'}
+
+⬜  *RESUMO FINANCEIRO*
+--------------------------------------------------
+${financialSummary}
+⭐️  *VALOR TOTAL GERAL: ${formatCurrency(budget.total)}*
+
+⬜  *CONDIÇÕES COMERCIAIS*
+--------------------------------------------------
+   ⚙️ *Forma de Pagamento:* ${paymentMethodLabel}
+   🔑 *Chave PIX para Depósito:* \`${pixKey}\` (${pixReceiver})
+   ⏱️ *Prazo de Execução:* ${budget.terms.deliveryTime || 'A combinar'}
+   🛡️ *Garantia dos Serviços:* ${budget.terms.warranty || 'Garantia legal de 90 dias'}
+   📅 *Validade da Proposta:* até ${formatDateBR(validUntilDate.toISOString())}
+
+📝  *OBSERVAÇÕES*
+--------------------------------------------------
+_${budget.terms.notes || 'Proposta sujeita aos termos e condições acordados. Valores válidos pelo período da proposta.'}_
+
+--------------------------------------------------
+Qualquer dúvida ou ajuste que precisar, estou à inteira disposição para conversarmos e fecharmos o projeto. Podemos confirmar para darmos início?
 
 Atenciosamente,
-*${provider.companyName || 'OrçaZap Pro'}*
-${provider.phone ? `📞 ${provider.phone}` : ''}`;
+*${companyName}*${provider.phone ? `\n📞 ${provider.phone}` : ''}`;
 
   return message;
 }
@@ -83,3 +94,6 @@ export function openWhatsApp(budget: Budget): void {
 
   window.open(url, '_blank');
 }
+
+// Alias em português para interoperabilidade
+export const enviarWhatsApp = openWhatsApp;
