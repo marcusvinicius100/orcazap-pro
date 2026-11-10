@@ -46,6 +46,10 @@ export function App() {
   // Controle do PWA Install Prompt
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
 
+  // Modais de acessibilidade mobile
+  const [showIOSModal, setShowIOSModal] = useState(false);
+  const [showQRModal, setShowQRModal] = useState(false);
+
   useEffect(() => {
     const handler = (e: any) => {
       e.preventDefault();
@@ -55,7 +59,17 @@ export function App() {
     return () => window.removeEventListener('beforeinstallprompt', handler);
   }, []);
 
+  // Detecção inteligente de SO: iOS abre modal de instruções, Android dispara prompt nativo
   const handleInstallApp = async () => {
+    const isIOS =
+      /iPad|iPhone|iPod/.test(navigator.userAgent) &&
+      !(window as any).MSStream;
+
+    if (isIOS) {
+      setShowIOSModal(true);
+      return;
+    }
+
     if (!deferredPrompt) return;
     deferredPrompt.prompt();
     const { outcome } = await deferredPrompt.userChoice;
@@ -218,6 +232,7 @@ export function App() {
                 saveOrUpdateBudget(updated);
               }}
               onProviderChange={handleSaveProvider}
+              onOpenQRModal={() => setShowQRModal(true)}
             />
           </div>
 
@@ -271,6 +286,123 @@ export function App() {
         budget={currentBudget}
         onInvoiceSuccess={handleInvoiceSuccess}
       />
+
+      {/* MODAL: Instruções de Instalação no iOS (iPhone/iPad) */}
+      {showIOSModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/90 backdrop-blur-md">
+          <div className="bg-slate-900 border border-slate-700 rounded-2xl max-w-sm w-full p-6 shadow-2xl animate-fadeIn">
+            <div className="text-center space-y-4">
+              <div className="text-5xl">📱</div>
+              <h2 className="text-lg font-bold text-white">Instalação no iPhone / iPad</h2>
+              <div className="bg-slate-800/80 border border-slate-700 rounded-xl p-4 text-left space-y-3">
+                <p className="text-sm text-slate-300 leading-relaxed">
+                  <span className="text-emerald-400 font-bold">1.</span> Abra este link no{' '}
+                  <strong className="text-white">Safari</strong> (não no Chrome).
+                </p>
+                <p className="text-sm text-slate-300 leading-relaxed">
+                  <span className="text-emerald-400 font-bold">2.</span> Toque no ícone de{' '}
+                  <strong className="text-emerald-400">Compartilhar</strong> (↑ seta para cima) na barra inferior.
+                </p>
+                <p className="text-sm text-slate-300 leading-relaxed">
+                  <span className="text-emerald-400 font-bold">3.</span> Role para baixo e selecione{' '}
+                  <strong className="text-emerald-400">"Adicionar à Tela de Início"</strong>.
+                </p>
+              </div>
+              <div className="text-4xl">⬆️</div>
+              <p className="text-xs text-slate-500">
+                O app será instalado sem precisar da App Store e funcionará offline.
+              </p>
+              <button
+                onClick={() => setShowIOSModal(false)}
+                className="w-full px-4 py-2.5 bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 text-white font-semibold rounded-xl transition-colors"
+              >
+                Entendi ✓
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL: QR Code — Abrir no Celular */}
+      {showQRModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/90 backdrop-blur-md"
+          onClick={(e) => { if (e.target === e.currentTarget) setShowQRModal(false); }}
+        >
+          <div className="bg-slate-900 border border-slate-700 rounded-2xl max-w-md w-full p-6 shadow-2xl animate-fadeIn">
+            {/* Cabeçalho do Modal */}
+            <div className="flex items-center justify-between mb-5">
+              <h2 className="text-base font-bold text-white flex items-center gap-2">
+                📱 Abrir no Celular
+              </h2>
+              <button
+                onClick={() => setShowQRModal(false)}
+                className="text-slate-400 hover:text-white hover:bg-slate-800 p-1.5 rounded-lg transition-colors"
+                title="Fechar"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* QR Code gerado via API pública */}
+            <div className="flex justify-center mb-3">
+              <div className="p-3 bg-white rounded-2xl shadow-lg border-4 border-emerald-400/40">
+                <img
+                  src="https://api.qrserver.com/v1/create-qr-code/?size=192x192&data=https%3A%2F%2Forcazap-pro.vercel.app&bgcolor=ffffff&color=0f172a&margin=2&format=png"
+                  alt="QR Code — OrçaZap Pro"
+                  width={192}
+                  height={192}
+                  className="rounded-lg"
+                />
+              </div>
+            </div>
+
+            <p className="text-center text-xs text-slate-400 mb-5 flex items-center justify-center gap-1.5">
+              <span>🔍</span> Aponte a câmera do celular para o QR Code acima
+            </p>
+
+            {/* Instruções em Duas Colunas */}
+            <div className="grid grid-cols-2 gap-3 mb-5">
+              {/* Android */}
+              <div className="bg-slate-800/80 border border-slate-700 rounded-xl p-3.5 text-center">
+                <div className="text-3xl mb-2">🤖</div>
+                <p className="text-xs font-bold text-emerald-400 mb-1.5">Android</p>
+                <ol className="text-[11px] text-slate-300 space-y-1 text-left list-none">
+                  <li>① Abra o link</li>
+                  <li>② Menu Chrome (⋮)</li>
+                  <li>③ "Adicionar à tela inicial"</li>
+                </ol>
+              </div>
+              {/* iPhone */}
+              <div className="bg-slate-800/80 border border-slate-700 rounded-xl p-3.5 text-center">
+                <div className="text-3xl mb-2">🍎</div>
+                <p className="text-xs font-bold text-sky-400 mb-1.5">iPhone / iPad</p>
+                <ol className="text-[11px] text-slate-300 space-y-1 text-left list-none">
+                  <li>① Abra no Safari</li>
+                  <li>② Toque em Compartilhar ↑</li>
+                  <li>③ "Adicionar à Tela de Início"</li>
+                </ol>
+              </div>
+            </div>
+
+            {/* Link copiável */}
+            <div className="bg-slate-800/60 border border-slate-700 rounded-xl px-4 py-2.5 flex items-center justify-between gap-2">
+              <span className="text-xs text-emerald-400 font-mono truncate">
+                https://orcazap-pro.vercel.app
+              </span>
+              <button
+                onClick={() => {
+                  navigator.clipboard.writeText('https://orcazap-pro.vercel.app');
+                }}
+                className="text-xs text-slate-400 hover:text-white bg-slate-700 hover:bg-slate-600 px-2 py-1 rounded-lg transition-colors whitespace-nowrap"
+                title="Copiar link"
+              >
+                📋 Copiar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

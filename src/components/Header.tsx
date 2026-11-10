@@ -112,17 +112,15 @@ export const Header: React.FC<HeaderProps> = ({
 
         {/* Action Buttons */}
         <div className="flex items-center gap-2">
-          {/* Botão Instalar PWA */}
-          {installPrompt && (
-            <button
-              onClick={onInstallApp}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-emerald-600/20 text-emerald-300 border border-emerald-500/40 hover:bg-emerald-600/30 transition-colors"
-              title="Instalar OrçaZap no celular ou computador"
-            >
-              <Download className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">Instalar App</span>
-            </button>
-          )}
+          {/* Botão Instalar PWA — sempre visível para detectar iOS ou Android */}
+          <button
+            onClick={onInstallApp}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-emerald-600/20 text-emerald-300 border border-emerald-500/40 hover:bg-emerald-600/30 transition-colors"
+            title="Instalar OrçaZap no celular ou computador"
+          >
+            <Download className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline">Instalar App</span>
+          </button>
 
           {/* Novo Orçamento */}
           <button

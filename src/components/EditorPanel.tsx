@@ -30,9 +30,10 @@ interface EditorPanelProps {
   budget: Budget;
   onChange: (updated: Budget) => void;
   onProviderChange?: (updated: ProviderProfile) => void;
+  onOpenQRModal?: () => void;
 }
 
-export const EditorPanel: React.FC<EditorPanelProps> = ({ budget, onChange, onProviderChange }) => {
+export const EditorPanel: React.FC<EditorPanelProps> = ({ budget, onChange, onProviderChange, onOpenQRModal }) => {
   // Controle da seção expansível Configurações da Minha Empresa
   const [isCompanyExpanded, setIsCompanyExpanded] = useState<boolean>(true);
 
@@ -209,6 +210,21 @@ export const EditorPanel: React.FC<EditorPanelProps> = ({ budget, onChange, onPr
 
   return (
     <div className="space-y-6 pb-20 lg:pb-8">
+      {/* 📱 BOTÃO: ABRIR NO CELULAR (QR Code Modal) */}
+      {onOpenQRModal && (
+        <button
+          type="button"
+          onClick={onOpenQRModal}
+          className="w-full flex items-center justify-center gap-2.5 px-4 py-3 rounded-xl bg-slate-800/70 border border-slate-700 hover:border-emerald-500/50 hover:bg-slate-800 text-slate-300 hover:text-white text-sm font-medium transition-all group shadow-sm"
+          title="Gerar QR Code para abrir e instalar o app no celular"
+        >
+          <span className="text-lg group-hover:scale-110 transition-transform">📱</span>
+          <span>Abrir no Celular</span>
+          <span className="ml-auto text-xs text-slate-500 group-hover:text-emerald-400 transition-colors font-mono">
+            QR Code ↗
+          </span>
+        </button>
+      )}
       {/* ⚙️ CONFIGURAÇÕES DA MINHA EMPRESA (EXPANSÍVEL) */}
       <section className="bg-slate-900/95 border border-emerald-500/30 rounded-2xl p-5 shadow-xl relative overflow-hidden transition-all duration-200">
         <div className="absolute top-0 left-0 h-1 w-full bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-500" />
