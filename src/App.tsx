@@ -168,11 +168,12 @@ export function App() {
           
           {/* Logotipo Estilizado */}
           <div className="flex flex-col items-center space-y-3">
-            {/* Imagem Oficial da Logo Centralizada e Destacada */}
+            {/* Imagem Oficial da Logo com proteção contra falha */}
             <div className="relative group">
               <img
                 src="/logo.png"
-                alt="Logo Oficial OrçaZap Pro"
+                alt="OrçaZap Pro Logo"
+                onError={(e) => { (e.target as HTMLElement).style.display = 'none'; }}
                 className="w-24 h-24 sm:w-28 sm:h-28 object-contain rounded-2xl drop-shadow-[0_8px_20px_rgba(16,185,129,0.35)]"
               />
             </div>

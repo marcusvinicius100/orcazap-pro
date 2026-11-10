@@ -68,6 +68,7 @@ export const CommercialPreviewA4: React.FC<CommercialPreviewA4Props> = ({ budget
                 <img
                   src="/logo.png"
                   alt="Logo da Empresa"
+                  onError={(e) => { (e.target as HTMLElement).style.display = 'none'; }}
                   className="w-full h-full object-contain print:block"
                 />
               </div>

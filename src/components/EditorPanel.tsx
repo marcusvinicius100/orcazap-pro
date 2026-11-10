@@ -216,6 +216,7 @@ export const EditorPanel: React.FC<EditorPanelProps> = ({ budget, onChange, onPr
           <img
             src="/logo.png"
             alt="Logo OrçaZap Pro"
+            onError={(e) => { (e.target as HTMLElement).style.display = 'none'; }}
             className="w-full h-full object-cover"
           />
         </div>

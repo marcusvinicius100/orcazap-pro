@@ -251,7 +251,7 @@ export function App() {
             <div className="relative group">
               <img
                 src="/logo.png"
-                alt="Logo Oficial Or?aZap Pro"
+                alt="Or?aZap Pro Logo" onError={(e) => { e.target.style.display = "none"; }}
                 className="w-24 h-24 sm:w-28 sm:h-28 object-contain rounded-2xl drop-shadow-[0_8px_20px_rgba(16,185,129,0.35)]"
               />
             </div>
