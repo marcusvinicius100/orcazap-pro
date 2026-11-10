@@ -210,6 +210,28 @@ export const EditorPanel: React.FC<EditorPanelProps> = ({ budget, onChange, onPr
 
   return (
     <div className="space-y-6 pb-20 lg:pb-8">
+      {/* ⚡ CABEÇALHO DO PAINEL DE EDIÇÃO COM LOGO DISCRETA */}
+      <div className="flex items-center gap-3 bg-slate-900/80 border border-slate-800 rounded-2xl p-3.5 shadow-sm">
+        <div className="w-9 h-9 rounded-xl overflow-hidden bg-slate-800 border border-slate-700/80 shrink-0 shadow-sm flex items-center justify-center">
+          <img
+            src="/logo.png"
+            alt="Logo OrçaZap Pro"
+            className="w-full h-full object-cover"
+          />
+        </div>
+        <div>
+          <div className="flex items-center gap-1.5">
+            <h2 className="text-sm font-bold text-white tracking-wide">
+              ⚡ Orça<span className="text-emerald-400">Zap</span> Pro
+            </h2>
+            <span className="text-[10px] font-semibold bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded-full border border-emerald-500/30">
+              Painel de Edição
+            </span>
+          </div>
+          <p className="text-[11px] text-slate-400">Preencha os dados abaixo para gerar o orçamento em tempo real</p>
+        </div>
+      </div>
+
       {/* 📱 BOTÃO: ABRIR NO CELULAR (QR Code Modal) */}
       {onOpenQRModal && (
         <button

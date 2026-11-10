@@ -75,13 +75,24 @@ export const Header: React.FC<HeaderProps> = ({
         
         {/* Brand / Logo */}
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-400 flex items-center justify-center shadow-md shadow-emerald-500/20">
-            <Sparkles className="w-5 h-5 text-white" />
+          <div className="w-10 h-10 rounded-xl overflow-hidden bg-slate-800 border border-slate-700/80 flex items-center justify-center shadow-md shadow-emerald-500/10 shrink-0">
+            <img
+              src="/logo.png"
+              alt="Logo OrçaZap Pro"
+              className="w-full h-full object-cover"
+              onError={(e) => {
+                // Fallback caso logo falhe
+                (e.currentTarget as HTMLElement).style.display = 'none';
+              }}
+            />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="font-bold text-lg text-white tracking-tight">
-                Orça<span className="text-emerald-400">Zap</span> <span className="text-xs bg-emerald-500/20 text-emerald-300 font-semibold px-2 py-0.5 rounded-full border border-emerald-500/30">PRO</span>
+              <h1 className="font-bold text-lg text-white tracking-tight flex items-center gap-1">
+                <span>⚡ Orça<span className="text-emerald-400">Zap</span></span>
+                <span className="text-xs bg-emerald-500/20 text-emerald-300 font-semibold px-2 py-0.5 rounded-full border border-emerald-500/30">
+                  PRO
+                </span>
               </h1>
             </div>
             <p className="text-xs text-slate-400 hidden sm:block">

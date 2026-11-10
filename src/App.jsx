@@ -246,12 +246,18 @@ export function App() {
         <div className="max-w-md w-full bg-slate-900/90 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl relative z-10 flex flex-col items-center text-center space-y-5 backdrop-blur-md">
           
           {/* Logotipo Estilizado */}
-          <div className="flex flex-col items-center space-y-2">
-            <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center shadow-lg shadow-emerald-500/30">
-              <span className="text-3xl">?</span>
+          <div className="flex flex-col items-center space-y-3">
+            {/* Imagem Oficial da Logo Centralizada e Destacada */}
+            <div className="relative group">
+              <img
+                src="/logo.png"
+                alt="Logo Oficial Or?aZap Pro"
+                className="w-24 h-24 sm:w-28 sm:h-28 object-contain rounded-2xl drop-shadow-[0_8px_20px_rgba(16,185,129,0.35)]"
+              />
             </div>
+
             <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white flex items-center gap-1.5 justify-center">
-              <span>Or?a<span className="text-emerald-400">Zap</span></span>
+              <span>? Or?a<span className="text-emerald-400">Zap</span></span>
               <span className="text-xs font-bold uppercase tracking-wider bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2.5 py-0.5 rounded-full">
                 PRO
               </span>

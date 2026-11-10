@@ -60,22 +60,28 @@ export const CommercialPreviewA4: React.FC<CommercialPreviewA4Props> = ({ budget
       {/* CABEÇALHO DO DOCUMENTO A4 */}
       <header className="border-b-2 border-emerald-600 pb-5">
         <div className="flex flex-col sm:flex-row justify-between items-start gap-4">
-          {/* Dados do Prestador */}
+          {/* Dados do Prestador com Logo Oficial */}
           <div className="space-y-1 max-w-md">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-emerald-600 text-white flex items-center justify-center font-bold text-base shadow-sm">
-                <Building2 className="w-4 h-4" />
+            <div className="flex items-center gap-3">
+              {/* Logo Oficial do Sistema visível na tela e na impressão/PDF com print:block */}
+              <div className="w-12 h-12 rounded-xl overflow-hidden border border-slate-200 bg-white shadow-sm shrink-0 flex items-center justify-center print:block">
+                <img
+                  src="/logo.png"
+                  alt="Logo da Empresa"
+                  className="w-full h-full object-contain print:block"
+                />
               </div>
-              <h1 className="text-xl font-black text-slate-900 tracking-tight leading-tight">
-                {budget.provider.companyName || budget.provider.tradeName || 'Minha Empresa'}
-              </h1>
+              <div>
+                <h1 className="text-xl font-black text-slate-900 tracking-tight leading-tight">
+                  {budget.provider.companyName || budget.provider.tradeName || 'Minha Empresa'}
+                </h1>
+                {budget.provider.tradeName && budget.provider.tradeName !== budget.provider.companyName && (
+                  <p className="text-xs font-medium text-slate-600">
+                    {budget.provider.tradeName}
+                  </p>
+                )}
+              </div>
             </div>
-
-            {budget.provider.tradeName && budget.provider.tradeName !== budget.provider.companyName && (
-              <p className="text-xs font-medium text-slate-600">
-                {budget.provider.tradeName}
-              </p>
-            )}
 
             <div className="text-[11px] text-slate-600 space-y-0.5 pt-1">
               {budget.provider.document && (
