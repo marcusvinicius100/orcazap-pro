@@ -154,7 +154,7 @@ export function App() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-950 text-slate-100">
+    <div className="min-h-screen flex flex-col bg-slate-950 text-slate-100 print:bg-white print:text-black print:min-h-0">
       
       {/* Header Superior */}
       <Header
@@ -170,7 +170,7 @@ export function App() {
       />
 
       {/* Navegação por Abas para Telas Mobile (no-print) */}
-      <div className="no-print lg:hidden bg-slate-900 border-b border-slate-800 sticky top-16 z-30 px-4 py-2">
+      <div className="no-print lg:hidden bg-slate-900 border-b border-slate-800 sticky top-16 z-30 px-4 py-2 print:hidden">
         <div className="grid grid-cols-2 gap-2 bg-slate-950 p-1 rounded-xl border border-slate-800">
           <button
             onClick={() => setMobileTab('editor')}
@@ -199,7 +199,7 @@ export function App() {
       </div>
 
       {/* Barra de Ações Rápidas (WhatsApp, Salvar, PDF, SEFAZ) */}
-      <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 pt-4 pb-2">
+      <div className="no-print print:hidden max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 pt-4 pb-2">
         <ActionButtons
           budget={currentBudget}
           onSave={handleSaveCurrentBudget}
@@ -208,12 +208,12 @@ export function App() {
       </div>
 
       {/* CORPO PRINCIPAL: Layout em Duas Colunas no Desktop / Abas no Mobile */}
-      <main className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-4">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      <main className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-4 print:p-0 print:m-0 print:max-w-none print:w-full print:block">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start print:block print:w-full">
           
-          {/* COLUNA ESQUERDA: Painel de Edição */}
+          {/* COLUNA ESQUERDA: Painel de Edição (Totalmente oculto na impressão) */}
           <div
-            className={`lg:col-span-6 xl:col-span-5 ${
+            className={`no-print print:hidden lg:col-span-6 xl:col-span-5 ${
               mobileTab === 'editor' ? 'block' : 'hidden lg:block'
             }`}
           >
@@ -228,13 +228,13 @@ export function App() {
             />
           </div>
 
-          {/* COLUNA DIREITA: Folha Comercial A4 (Preview em Tempo Real) */}
+          {/* COLUNA DIREITA: Folha Comercial A4 (Preview em Tempo Real / 100% visível na Impressão) */}
           <div
-            className={`lg:col-span-6 xl:col-span-7 flex flex-col items-center ${
+            className={`lg:col-span-6 xl:col-span-7 flex flex-col items-center print:block print:w-full print:p-0 print:m-0 ${
               mobileTab === 'preview' ? 'block' : 'hidden lg:block'
             }`}
           >
-            <div className="no-print w-full flex items-center justify-between pb-3 px-1">
+            <div className="no-print print:hidden w-full flex items-center justify-between pb-3 px-1">
               <span className="text-xs font-medium text-slate-400 flex items-center gap-1.5">
                 <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
                 Visualização em Tempo Real (Folha Padrão A4)
@@ -245,7 +245,7 @@ export function App() {
             </div>
 
             {/* Container do Documento Comercial A4 */}
-            <div className="w-full flex justify-center overflow-x-auto pb-8">
+            <div className="w-full flex justify-center overflow-x-auto pb-8 print:p-0 print:m-0 print:w-full print:overflow-visible print:block">
               <CommercialPreviewA4 budget={currentBudget} />
             </div>
           </div>
@@ -253,31 +253,33 @@ export function App() {
       </main>
 
       {/* MODAIS DO SISTEMA */}
-      <ProviderSettingsModal
-        isOpen={isSettingsOpen}
-        onClose={() => setIsSettingsOpen(false)}
-        provider={provider}
-        onSave={handleSaveProvider}
-      />
+      <div className="no-print print:hidden">
+        <ProviderSettingsModal
+          isOpen={isSettingsOpen}
+          onClose={() => setIsSettingsOpen(false)}
+          provider={provider}
+          onSave={handleSaveProvider}
+        />
 
-      <HistoryModal
-        isOpen={isHistoryOpen}
-        onClose={() => setIsHistoryOpen(false)}
-        budgets={budgets}
-        onSelectBudget={(b) => {
-          setCurrentBudget(b);
-          setMobileTab('editor');
-        }}
-        onDeleteBudget={handleDeleteBudget}
-        onDuplicateBudget={handleDuplicateBudget}
-      />
+        <HistoryModal
+          isOpen={isHistoryOpen}
+          onClose={() => setIsHistoryOpen(false)}
+          budgets={budgets}
+          onSelectBudget={(b) => {
+            setCurrentBudget(b);
+            setMobileTab('editor');
+          }}
+          onDeleteBudget={handleDeleteBudget}
+          onDuplicateBudget={handleDuplicateBudget}
+        />
 
-      <SEFAZModal
-        isOpen={isSEFAZOpen}
-        onClose={() => setIsSEFAZOpen(false)}
-        budget={currentBudget}
-        onInvoiceSuccess={handleInvoiceSuccess}
-      />
+        <SEFAZModal
+          isOpen={isSEFAZOpen}
+          onClose={() => setIsSEFAZOpen(false)}
+          budget={currentBudget}
+          onInvoiceSuccess={handleInvoiceSuccess}
+        />
+      </div>
 
       {/* MODAL: Instruções de Instalação no iOS (iPhone/iPad) */}
       {showIOSModal && (
