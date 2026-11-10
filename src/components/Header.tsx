@@ -22,6 +22,8 @@ interface HeaderProps {
   historyCount: number;
   installPrompt: any;
   onInstallApp: () => void;
+  /** Abre o modal de QR Code "Abrir no Celular" */
+  onOpenQRModal: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -33,6 +35,7 @@ export const Header: React.FC<HeaderProps> = ({
   historyCount,
   installPrompt,
   onInstallApp,
+  onOpenQRModal,
 }) => {
   const getStatusBadge = (status: BudgetStatus) => {
     switch (status) {
@@ -112,15 +115,17 @@ export const Header: React.FC<HeaderProps> = ({
 
         {/* Action Buttons */}
         <div className="flex items-center gap-2">
-          {/* Botão Instalar PWA — sempre visível para detectar iOS ou Android */}
-          <button
-            onClick={onInstallApp}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-emerald-600/20 text-emerald-300 border border-emerald-500/40 hover:bg-emerald-600/30 transition-colors"
-            title="Instalar OrçaZap no celular ou computador"
-          >
-            <Download className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Instalar App</span>
-          </button>
+          {/* Botão Instalar PWA — aparece apenas quando o navegador oferece o prompt nativo (Android/Desktop Chrome) */}
+          {installPrompt && (
+            <button
+              onClick={onInstallApp}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-emerald-600/20 text-emerald-300 border border-emerald-500/40 hover:bg-emerald-600/30 transition-colors"
+              title="Instalar OrçaZap Pro como aplicativo no dispositivo"
+            >
+              <Download className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Instalar App</span>
+            </button>
+          )}
 
           {/* Novo Orçamento */}
           <button
@@ -145,6 +150,16 @@ export const Header: React.FC<HeaderProps> = ({
                 {historyCount}
               </span>
             )}
+          </button>
+
+          {/* 📱 Botão QR Code — Abrir no Celular (abre modal com QR Code e instruções) */}
+          <button
+            onClick={onOpenQRModal}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-800 text-slate-200 hover:bg-slate-700 border border-slate-700 hover:border-sky-500/50 hover:text-sky-300 transition-colors"
+            title="Gerar QR Code para abrir e instalar o app no celular"
+          >
+            <span className="text-sm leading-none">📱</span>
+            <span className="hidden sm:inline">Abrir no Celular</span>
           </button>
 
           {/* Configurações Prestador */}

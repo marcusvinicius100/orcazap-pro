@@ -59,17 +59,8 @@ export function App() {
     return () => window.removeEventListener('beforeinstallprompt', handler);
   }, []);
 
-  // Detecção inteligente de SO: iOS abre modal de instruções, Android dispara prompt nativo
+  // Instalar PWA nativo — apenas dispara o prompt do navegador (Android/Desktop Chrome)
   const handleInstallApp = async () => {
-    const isIOS =
-      /iPad|iPhone|iPod/.test(navigator.userAgent) &&
-      !(window as any).MSStream;
-
-    if (isIOS) {
-      setShowIOSModal(true);
-      return;
-    }
-
     if (!deferredPrompt) return;
     deferredPrompt.prompt();
     const { outcome } = await deferredPrompt.userChoice;
@@ -175,6 +166,7 @@ export function App() {
         historyCount={budgets.length}
         installPrompt={deferredPrompt}
         onInstallApp={handleInstallApp}
+        onOpenQRModal={() => setShowQRModal(true)}
       />
 
       {/* Navegação por Abas para Telas Mobile (no-print) */}
