@@ -50,6 +50,9 @@ export function App() {
   const [showIOSModal, setShowIOSModal] = useState(false);
   const [showQRModal, setShowQRModal] = useState(false);
 
+  // Controle da Tela de Entrada (Landing Page / Welcome Screen)
+  const [showWelcomeScreen, setShowWelcomeScreen] = useState(true);
+
   useEffect(() => {
     const handler = (e: any) => {
       e.preventDefault();
@@ -152,6 +155,86 @@ export function App() {
     saveOrUpdateBudget(updated);
     setBudgets(loadBudgetsHistory());
   };
+
+  // 1. TELA DE ENTRADA (LANDING PAGE / WELCOME SCREEN)
+  if (showWelcomeScreen) {
+    return (
+      <div className="min-h-screen bg-slate-950 text-white flex flex-col items-center justify-center p-4 sm:p-6 relative overflow-hidden">
+        {/* Glow de fundo decorativo */}
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-10 right-10 w-80 h-80 bg-teal-500/10 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="max-w-md w-full bg-slate-900/90 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl relative z-10 flex flex-col items-center text-center space-y-5 backdrop-blur-md">
+          
+          {/* Logotipo Estilizado */}
+          <div className="flex flex-col items-center space-y-2">
+            <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center shadow-lg shadow-emerald-500/30">
+              <span className="text-3xl">⚡</span>
+            </div>
+            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white flex items-center gap-1.5 justify-center">
+              <span>Orça<span className="text-emerald-400">Zap</span></span>
+              <span className="text-xs font-bold uppercase tracking-wider bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2.5 py-0.5 rounded-full">
+                PRO
+              </span>
+            </h1>
+            <p className="text-xs sm:text-sm text-slate-300 font-medium leading-relaxed max-w-sm">
+              Sistema PWA ágil para prestadores de serviços: gere propostas comerciais elegantes em folha padrão A4, exporte em PDF e envie orçamentos profissionais direto pelo WhatsApp com um clique!
+            </p>
+          </div>
+
+          {/* QR Code Centralizado via api.qrserver.com */}
+          <div className="flex flex-col items-center space-y-2 pt-1">
+            <div className="p-3 bg-white rounded-2xl shadow-xl border-4 border-emerald-400/40">
+              <img
+                src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=https%3A%2F%2Forcazap-pro.vercel.app&bgcolor=ffffff&color=0f172a&margin=2&format=png"
+                alt="QR Code Oficial — OrçaZap Pro"
+                width={180}
+                height={180}
+                className="rounded-lg block"
+              />
+            </div>
+            <p className="text-[11px] text-slate-400 font-mono">
+              Escaneie com a câmera do seu celular
+            </p>
+          </div>
+
+          {/* Instruções de Instalação Inteligentes */}
+          <div className="grid grid-cols-2 gap-3 w-full text-left">
+            {/* Android */}
+            <div className="bg-slate-800/80 border border-slate-700/80 rounded-2xl p-3 sm:p-3.5 space-y-1">
+              <div className="flex items-center gap-1.5 font-bold text-xs text-emerald-400">
+                <span>🤖</span>
+                <span>Android</span>
+              </div>
+              <p className="text-[11px] text-slate-300 leading-snug">
+                Escaneie o QR Code e clique em <strong className="text-white">"Instalar App"</strong>.
+              </p>
+            </div>
+
+            {/* iPhone */}
+            <div className="bg-slate-800/80 border border-slate-700/80 rounded-2xl p-3 sm:p-3.5 space-y-1">
+              <div className="flex items-center gap-1.5 font-bold text-xs text-sky-400">
+                <span>🍏</span>
+                <span>iPhone</span>
+              </div>
+              <p className="text-[11px] text-slate-300 leading-snug">
+                Abra no Safari, toque em <strong className="text-white">Compartilhar (↑)</strong> e escolha <strong className="text-white">"Adicionar à Tela de Início"</strong>.
+              </p>
+            </div>
+          </div>
+
+          {/* Botão de Acesso Brilhante */}
+          <button
+            type="button"
+            onClick={() => setShowWelcomeScreen(false)}
+            className="w-full py-3.5 px-6 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 text-slate-950 font-black text-sm tracking-wide shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer"
+          >
+            <span>Acessar o Sistema 🚀</span>
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex flex-col bg-slate-950 text-slate-100 print:bg-white print:text-black print:min-h-0">
