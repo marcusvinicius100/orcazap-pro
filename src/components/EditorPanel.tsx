@@ -210,20 +210,15 @@ export const EditorPanel: React.FC<EditorPanelProps> = ({ budget, onChange, onPr
 
   return (
     <div className="space-y-6 pb-20 lg:pb-8">
-      {/* ⚡ CABEÇALHO DO PAINEL DE EDIÇÃO COM LOGO DISCRETA */}
+      {/* ⚡ CABEÇALHO DO PAINEL DE EDIÇÃO COM EMOJI ✨ */}
       <div className="flex items-center gap-3 bg-slate-900/80 border border-slate-800 rounded-2xl p-3.5 shadow-sm">
-        <div className="w-9 h-9 rounded-xl overflow-hidden bg-slate-800 border border-slate-700/80 shrink-0 shadow-sm flex items-center justify-center">
-          <img
-            src="/logo.png"
-            alt="Logo OrçaZap Pro"
-            onError={(e) => { (e.target as HTMLElement).style.display = 'none'; }}
-            className="w-full h-full object-cover"
-          />
+        <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-emerald-600/30 to-teal-500/30 border border-emerald-500/30 shrink-0 shadow-sm flex items-center justify-center text-lg">
+          <span>✨</span>
         </div>
         <div>
           <div className="flex items-center gap-1.5">
-            <h2 className="text-sm font-bold text-white tracking-wide">
-              ⚡ Orça<span className="text-emerald-400">Zap</span> Pro
+            <h2 className="text-sm font-bold text-emerald-400 tracking-wide">
+              ⚡ OrçaZap Pro
             </h2>
             <span className="text-[10px] font-semibold bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded-full border border-emerald-500/30">
               Painel de Edição

@@ -60,17 +60,11 @@ export const CommercialPreviewA4: React.FC<CommercialPreviewA4Props> = ({ budget
       {/* CABEÇALHO DO DOCUMENTO A4 */}
       <header className="border-b-2 border-emerald-600 pb-5">
         <div className="flex flex-col sm:flex-row justify-between items-start gap-4">
-          {/* Dados do Prestador com Logo Oficial */}
+          {/* Dados do Prestador com Ícone */}
           <div className="space-y-1 max-w-md">
             <div className="flex items-center gap-3">
-              {/* Logo Oficial do Sistema visível na tela e na impressão/PDF com print:block */}
-              <div className="w-12 h-12 rounded-xl overflow-hidden border border-slate-200 bg-white shadow-sm shrink-0 flex items-center justify-center print:block">
-                <img
-                  src="/logo.png"
-                  alt="Logo da Empresa"
-                  onError={(e) => { (e.target as HTMLElement).style.display = 'none'; }}
-                  className="w-full h-full object-contain print:block"
-                />
+              <div className="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-bold text-lg shadow-sm shrink-0">
+                <Building2 className="w-5 h-5" />
               </div>
               <div>
                 <h1 className="text-xl font-black text-slate-900 tracking-tight leading-tight">

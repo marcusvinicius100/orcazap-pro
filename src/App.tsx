@@ -168,21 +168,13 @@ export function App() {
           
           {/* Logotipo Estilizado */}
           <div className="flex flex-col items-center space-y-3">
-            {/* Imagem Oficial da Logo com proteção contra falha */}
-            <div className="relative group">
-              <img
-                src="/logo.png"
-                alt="OrçaZap Pro Logo"
-                onError={(e) => { (e.target as HTMLElement).style.display = 'none'; }}
-                className="w-24 h-24 sm:w-28 sm:h-28 object-contain rounded-2xl drop-shadow-[0_8px_20px_rgba(16,185,129,0.35)]"
-              />
+            {/* Ícone de emoji comum ✨ */}
+            <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-emerald-500/20 to-teal-500/20 border border-emerald-500/30 flex items-center justify-center shadow-lg shadow-emerald-500/20 text-4xl">
+              <span>✨</span>
             </div>
 
-            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white flex items-center gap-1.5 justify-center">
-              <span>⚡ Orça<span className="text-emerald-400">Zap</span></span>
-              <span className="text-xs font-bold uppercase tracking-wider bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2.5 py-0.5 rounded-full">
-                PRO
-              </span>
+            <h1 className="text-3xl font-bold text-emerald-400">
+              ⚡ OrçaZap Pro
             </h1>
             <p className="text-xs sm:text-sm text-slate-300 font-medium leading-relaxed max-w-sm">
               Sistema PWA ágil para prestadores de serviços: gere propostas comerciais elegantes em folha padrão A4, exporte em PDF e envie orçamentos profissionais direto pelo WhatsApp com um clique!
