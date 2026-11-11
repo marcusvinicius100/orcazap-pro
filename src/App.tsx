@@ -168,14 +168,21 @@ export function App() {
           
           {/* Logotipo Estilizado */}
           <div className="flex flex-col items-center space-y-3">
-            {/* Ícone de emoji comum ✨ */}
-            <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-emerald-500/20 to-teal-500/20 border border-emerald-500/30 flex items-center justify-center shadow-lg shadow-emerald-500/20 text-4xl">
-              <span>✨</span>
+            {/* Logo em texto — bloco MG estilizado */}
+            <div className="w-16 h-16 bg-emerald-500 text-slate-950 font-black text-2xl flex items-center justify-center rounded-2xl mx-auto shadow-lg shadow-emerald-500/20">
+              MG
             </div>
 
             <h1 className="text-3xl font-bold text-emerald-400">
               ⚡ OrçaZap Pro
             </h1>
+
+            {/* Créditos dos Criadores */}
+            <p className="text-xs text-slate-400 font-medium">
+              Desenvolvido por: Marcus Vinicius &amp; Guilherme Ribeiro<br />
+              <span className="text-slate-500">Alunos Unifadra - Tupã</span>
+            </p>
+
             <p className="text-xs sm:text-sm text-slate-300 font-medium leading-relaxed max-w-sm">
               Sistema PWA ágil para prestadores de serviços: gere propostas comerciais elegantes em folha padrão A4, exporte em PDF e envie orçamentos profissionais direto pelo WhatsApp com um clique!
             </p>
