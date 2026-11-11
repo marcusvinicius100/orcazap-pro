@@ -179,8 +179,8 @@ export function App() {
 
             {/* Créditos dos Criadores */}
             <p className="text-xs text-slate-400 font-medium">
-              Desenvolvido por: Marcus Vinicius &amp; Guilherme Ribeiro<br />
-              <span className="text-slate-500">Alunos Unifadra - Tupã</span>
+              Desenvolvido por: Marcus Vinicius Fernandes Baqueti &amp; Guilherme Ribeiro de Godoy<br />
+              <span className="text-slate-500">Alunos Unifadap - Tupã</span>
             </p>
 
             <p className="text-xs sm:text-sm text-slate-300 font-medium leading-relaxed max-w-sm">
